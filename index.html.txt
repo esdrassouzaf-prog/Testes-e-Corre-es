@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Testes Qualidade Realsi</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --primary: #1e3a8a;
+      --primary-light: #eff6ff;
+      --accent: #2563eb;
+      --accent-hover: #1d4ed8;
+      --text: #1e293b;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --success: #15803d;
+      --success-bg: #dcfce7;
+      --danger: #b91c1c;
+      --danger-bg: #fee2e2;
+      --radius: 14px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      padding: 24px 16px 48px;
+    }
+
+    .wrapper {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+
+    .topbar {
+      background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%);
+      color: #fff;
+      padding: 20px 26px;
+      border-radius: var(--radius);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+      box-shadow: 0 10px 25px -10px rgba(15, 23, 42, 0.4);
+      margin-bottom: 22px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 1.35rem;
+      letter-spacing: -0.01em;
+    }
+
+    .topbar p {
+      margin: 4px 0 0;
+      font-size: 0.86rem;
+      color: #cbd5e1;
+    }
+
+    .btn-sync {
+      background: rgba(255, 255, 255, 0.14);
+      color: #fff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 9px 15px;
+      border-radius: 9px;
+      font-weight: 600;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: 0.15s;
+    }
+    .btn-sync:hover { background: rgba(255, 255, 255, 0.24); }
+
+    .conn-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .conn-box input {
+      flex: 1;
+      min-width: 240px;
+      padding: 9px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      font-size: 0.88rem;
+    }
+
+    .alert {
+      padding: 11px 16px;
+      border-radius: 10px;
+      margin-bottom: 18px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      display: none;
+    }
+    .alert.show { display: block; }
+    .alert.ok { background: var(--success-bg); color: var(--success); }
+    .alert.err { background: var(--danger-bg); color: var(--danger); }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 390px 1fr;
+      gap: 22px;
+      align-items: start;
+    }
+
+    @media (max-width: 880px) {
+      .layout { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      box-shadow: 0 4px 14px -4px rgba(15, 23, 42, 0.06);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0 0 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .field { margin-bottom: 14px; }
+    .field label {
+      display: block;
+      font-size: 0.83rem;
+      font-weight: 600;
+      color: #334155;
+      margin-bottom: 5px;
+    }
+
+    .field input,
+    .field select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #cbd5e1;
+      border-radius: 9px;
+      font-size: 0.94rem;
+      color: var(--text);
+      background: #fff;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    .field input:focus,
+    .field select:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .field input[readonly] {
+      background: #f1f5f9;
+      color: #1e3a8a;
+      font-weight: 700;
+    }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .btn-submit {
+      width: 100%;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: 0.15s;
+    }
+    .btn-submit:hover { background: var(--accent-hover); }
+    .btn-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* Direita: Pesquisa e Detalhamento */
+    .search-bar {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 18px;
+      flex-wrap: wrap;
+    }
+
+    .search-bar input {
+      flex: 1;
+      min-width: 200px;
+      padding: 11px 14px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 0.95rem;
+    }
+
+    .search-bar input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .lote-chips {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+    }
+
+    .chip {
+      background: #f1f5f9;
+      border: 1px solid #cbd5e1;
+      color: #334155;
+      padding: 5px 11px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    .chip:hover, .chip.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9rem;
+    }
+
+    th {
+      text-align: left;
+      padding: 10px 10px;
+      background: #f8fafc;
+      color: #475569;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      border-bottom: 2px solid var(--border);
+    }
+
+    td {
+      padding: 11px 10px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: middle;
+    }
+
+    tr:hover td { background: #f8fafc; }
+
+    .badge-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 28px;
+      height: 28px;
+      padding: 0 8px;
+      border-radius: 8px;
+      background: var(--primary-light);
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 0.85rem;
+    }
+
+    .badge-mist {
+      display: inline-block;
+      background: #f1f5f9;
+      color: #334155;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 600;
+    }
+
+    .summary-box {
+      margin-top: 20px;
+      padding-top: 16px;
+      border-top: 1px dashed #cbd5e1;
+    }
+
+    .summary-title {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #475569;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .summary-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .sum-item {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 9px 13px;
+      font-size: 0.86rem;
+    }
+    .sum-item strong { color: var(--primary); }
+
+    .empty {
+      text-align: center;
+      color: var(--muted);
+      padding: 26px 12px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrapper">
+  <div class="topbar">
+    <div>
+      <h1>Testes Qualidade Realsi</h1>
+      <p>Registro rápido de correções por lote e consulta de histórico</p>
+    </div>
+    <button class="btn-sync" onclick="carregarDados()">Atualizar Lista</button>
+  </div>
+
+  <!-- Barra de conexão (só aparece se abrir fora do link do Apps Script) -->
+  <div id="connBox" class="conn-box" style="display:none;">
+    <input id="urlInput" type="text" placeholder="Cole aqui a URL /exec do Google Apps Script..." />
+    <button class="btn-submit" style="width:auto; padding:9px 16px; margin:0;" onclick="salvarUrl()">Conectar</button>
+  </div>
+
+  <div id="alerta" class="alert"></div>
+
+  <div class="layout">
+    <!-- ESQUERDA: FORMULÁRIO DE REGISTRO -->
+    <div class="card">
+      <div class="card-title">Nova Correção</div>
+      <form id="formCorrecao" onsubmit="registrarCorrecao(event)">
+        <div class="row-2">
+          <div class="field">
+            <label for="fLote">Lote *</label>
+            <input id="fLote" required placeholder="Ex: 1045" oninput="atualizarNumeroCorrecao()" />
+          </div>
+          <div class="field">
+            <label for="fMisturador">Misturador *</label>
+            <select id="fMisturador" required>
+              <option value="Misturador 01">Misturador 01</option>
+              <option value="Misturador 02">Misturador 02</option>
+              <option value="Misturador 03">Misturador 03</option>
+              <option value="Misturador 04">Misturador 04</option>
+              <option value="Misturador 05">Misturador 05</option>
+              <option value="Misturador 06">Misturador 06</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="fCorrecaoNum">Correção</label>
+          <input id="fCorrecaoNum" readonly value="1ª Correção" />
+        </div>
+
+        <div class="field">
+          <label for="fInsumo">Insumo (Pigmento / Aditivo) *</label>
+          <select id="fInsumo" required>
+            <option value="">Carregando lista da planilha...</option>
+          </select>
+        </div>
+
+        <div class="row-2">
+          <div class="field">
+            <label for="fQuantidade">Quantidade *</label>
+            <input id="fQuantidade" type="number" step="any" min="0.001" required placeholder="Ex: 100" />
+          </div>
+          <div class="field">
+            <label for="fUnidade">Unidade *</label>
+            <select id="fUnidade">
+              <option value="g">Gramas (g)</option>
+              <option value="kg">Quilos (kg)</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="fObs">Observação (opcional)</label>
+          <input id="fObs" placeholder="Ex: Ajuste de tonalidade / brilho" />
+        </div>
+
+        <button id="btnSalvar" type="submit" class="btn-submit">Salvar Correção</button>
+      </form>
+    </div>
+
+    <!-- DIREITA: PESQUISAR LOTE E DETALHAMENTO DAS CORREÇÕES -->
+    <div class="card">
+      <div class="card-title">
+        <span>Detalhamento das Correções no Lote</span>
+        <span id="contadorRegistros" style="font-size:0.82rem; color:var(--muted); font-weight:500;">0 registros</span>
+      </div>
+
+      <div class="search-bar">
+        <input id="pesquisaLote" type="text" placeholder="Pesquisar lote (digite o número do lote ou clique abaixo)..." oninput="renderHistorico()" />
+      </div>
+
+      <div id="lotesRecentes" class="lote-chips"></div>
+
+      <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:90px;">Correção</th>
+              <th style="width:145px;">Data</th>
+              <th>Descrição</th>
+            </tr>
+          </thead>
+          <tbody id="tbodyHistorico">
+            <tr><td colspan="3" class="empty">Carregando histórico...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div id="boxSoma" class="summary-box" style="display:none;">
+        <div class="summary-title">Total Adicionado neste Lote (por Insumo)</div>
+        <div id="gridSoma" class="summary-grid"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'realsi_apps_script_url';
+  let dados = {
+    insumos: [],
+    historico: []
+  };
+
+  function getApiUrl() {
+    // Se estiver rodando hospedado direto no Google Apps Script, usa a própria URL
+    if (window.location.href.includes('script.google.com')) {
+      return window.location.href.split('?')[0];
+    }
+    return localStorage.getItem(STORAGE_KEY) || '';
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const url = getApiUrl();
+    if (!window.location.href.includes('script.google.com')) {
+      document.getElementById('connBox').style.display = 'flex';
+      document.getElementById('urlInput').value = url;
+    }
+    if (url) {
+      carregarDados();
+    } else {
+      mostrarAlerta('Cole a URL do Apps Script acima para conectar com sua planilha.', 'err');
+    }
+  });
+
+  function salvarUrl() {
+    const val = document.getElementById('urlInput').value.trim();
+    if (!val) return mostrarAlerta('Informe uma URL válida.', 'err');
+    localStorage.setItem(STORAGE_KEY, val);
+    carregarDados();
+  }
+
+  function mostrarAlerta(msg, tipo = 'ok') {
+    const el = document.getElementById('alerta');
+    el.textContent = msg;
+    el.className = 'alert show ' + tipo;
+    if (tipo === 'ok') {
+      setTimeout(() => { el.className = 'alert'; }, 4000);
+    }
+  }
+
+  async function carregarDados() {
+    const url = getApiUrl();
+    if (!url) return;
+    try {
+      const resp = await fetch(`${url}?action=getAll`);
+      const json = await resp.json();
+      if (!json.ok) throw new Error(json.error || 'Erro ao carregar dados');
+
+      dados.insumos = json.insumos || [];
+      dados.historico = json.historico || [];
+
+      preencherInsumos();
+      atualizarNumeroCorrecao();
+      renderChipsLotes();
+      renderHistorico();
+    } catch (err) {
+      mostrarAlerta('Erro ao conectar: ' + err.message, 'err');
+    }
+  }
+
+  function preencherInsumos() {
+    const sel = document.getElementById('fInsumo');
+    const atual = sel.value;
+    if (dados.insumos.length === 0) {
+      sel.innerHTML = '<option value="">Cadastre insumos na aba Insumos da planilha</option>';
+      return;
+    }
+    sel.innerHTML = '<option value="">Selecione o insumo...</option>' +
+      dados.insumos.map(item => `<option value="${esc(item)}">${esc(item)}</option>`).join('');
+    if (atual) sel.value = atual;
+  }
+
+  function atualizarNumeroCorrecao() {
+    const lote = document.getElementById('fLote').value.trim().toLowerCase();
+    if (!lote) {
+      document.getElementById('fCorrecaoNum').value = '1ª Correção';
+      return;
+    }
+    const qtdExistente = dados.historico.filter(h => h.lote.toLowerCase() === lote).length;
+    document.getElementById('fCorrecaoNum').value = `${qtdExistente + 1}ª Correção`;
+  }
+
+  async function registrarCorrecao(e) {
+    e.preventDefault();
+    const url = getApiUrl();
+    if (!url) return mostrarAlerta('Conecte a URL do Apps Script primeiro.', 'err');
+
+    const btn = document.getElementById('btnSalvar');
+    btn.disabled = true;
+    btn.textContent = 'Salvando...';
+
+    const lote = document.getElementById('fLote').value.trim();
+    const misturador = document.getElementById('fMisturador').value;
+    const insumo = document.getElementById('fInsumo').value;
+    const quantidade = Number(document.getElementById('fQuantidade').value);
+    const unidade = document.getElementById('fUnidade').value;
+    const observacao = document.getElementById('fObs').value.trim();
+
+    try {
+      const resp = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          action: 'salvarCorrecao',
+          lote,
+          misturador,
+          insumo,
+          quantidade,
+          unidade,
+          observacao
+        })
+      });
+      const json = await resp.json();
+      if (!json.ok) throw new Error(json.error || 'Erro ao salvar');
+
+      dados.insumos = json.insumos || dados.insumos;
+      dados.historico = json.historico || dados.historico;
+
+      // Mantém o Lote e o Misturador preenchidos para facilitar lançar a próxima correção do mesmo lote
+      document.getElementById('fQuantidade').value = '';
+      document.getElementById('fObs').value = '';
+      document.getElementById('pesquisaLote').value = lote;
+
+      atualizarNumeroCorrecao();
+      renderChipsLotes();
+      renderHistorico();
+      mostrarAlerta(`${json.numeroCorrecao}ª correção salva no Lote ${lote}!`, 'ok');
+    } catch (err) {
+      mostrarAlerta('Erro ao salvar: ' + err.message, 'err');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Salvar Correção';
+    }
+  }
+
+  function renderChipsLotes() {
+    const container = document.getElementById('lotesRecentes');
+    const filtroAtual = document.getElementById('pesquisaLote').value.trim().toLowerCase();
+    const unicos = [];
+    dados.historico.slice().reverse().forEach(item => {
+      if (item.lote && !unicos.some(u => u.toLowerCase() === item.lote.toLowerCase())) {
+        unicos.push(item.lote);
+      }
+    });
+
+    if (unicos.length === 0) {
+      container.innerHTML = '';
+      return;
+    }
+
+    container.innerHTML =
+      `<span class="chip ${filtroAtual === '' ? 'active' : ''}" onclick="filtrarPorLote('')">Todos</span>` +
+      unicos.slice(0, 10).map(lote => {
+        const ativo = filtroAtual === lote.toLowerCase() ? 'active' : '';
+        return `<span class="chip ${ativo}" onclick="filtrarPorLote('${esc(lote)}')">Lote ${esc(lote)}</span>`;
+      }).join('');
+  }
+
+  function filtrarPorLote(lote) {
+    document.getElementById('pesquisaLote').value = lote;
+    if (lote) {
+      document.getElementById('fLote').value = lote;
+      atualizarNumeroCorrecao();
+    }
+    renderChipsLotes();
+    renderHistorico();
+  }
+
+  function renderHistorico() {
+    const busca = document.getElementById('pesquisaLote').value.trim().toLowerCase();
+    const tbody = document.getElementById('tbodyHistorico');
+    const boxSoma = document.getElementById('boxSoma');
+    const gridSoma = document.getElementById('gridSoma');
+
+    const filtrados = dados.historico.filter(item =>
+      !busca || item.lote.toLowerCase().includes(busca)
+    );
+
+    document.getElementById('contadorRegistros').textContent =
+      `${filtrados.length} ${filtrados.length === 1 ? 'registro' : 'registros'}`;
+
+    if (filtrados.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="3" class="empty">${busca ? 'Nenhuma correção encontrada para este lote.' : 'Nenhuma correção registrada ainda.'}</td></tr>`;
+      boxSoma.style.display = 'none';
+      return;
+    }
+
+    tbody.innerHTML = filtrados.map(item => `
+      <tr>
+        <td><span class="badge-num">${item.numeroCorrecao}</span></td>
+        <td style="color:#475569; font-size:0.84rem;">${esc(item.dataHora)}</td>
+        <td>
+          <strong>Lote ${esc(item.lote)}</strong>
+          <span class="badge-mist">${esc(item.misturador)}</span><br/>
+          <span>${esc(item.descricao)}</span>
+        </td>
+      </tr>
+    `).join('');
+
+    // Se estiver filtrando um lote específico, mostra o somatório individual por insumo
+    if (busca) {
+      const somaPorInsumo = {};
+      filtrados.forEach(item => {
+        if (!somaPorInsumo[item.insumo]) somaPorInsumo[item.insumo] = 0;
+        somaPorInsumo[item.insumo] += Number(item.totalKg || 0);
+      });
+
+      const entries = Object.entries(somaPorInsumo);
+      if (entries.length > 0) {
+        boxSoma.style.display = 'block';
+        gridSoma.innerHTML = entries.map(([nome, kg]) => {
+          const g = kg * 1000;
+          const textoQtd = kg >= 1 ? `${kg.toFixed(3)} kg (${g.toFixed(0)} g)` : `${g.toFixed(1)} g (${kg.toFixed(4)} kg)`;
+          return `<div class="sum-item">${esc(nome)}: <strong>${textoQtd}</strong></div>`;
+        }).join('');
+      } else {
+        boxSoma.style.display = 'none';
+      }
+    } else {
+      boxSoma.style.display = 'none';
+    }
+  }
+
+  function esc(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+</script>
+</body>
+</html>
